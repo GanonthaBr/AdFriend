@@ -3,7 +3,8 @@
   "name": "AdFriend - Ad Replacement Extension",
   "version": "1.0",
   "description": "Replaces ads with motivational and productive content widgets.",
-  "permissions": ["storage"],
+  "permissions": ["activeTab", "contextMenus", "webRequest", "storage"],
+  "optional_permissions": ["topSites"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"
