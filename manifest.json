@@ -1,10 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "AdFriend - Ad Replacement Extension",
+  "name": "Ad Content Replacer",
   "version": "1.0",
-  "description": "Replaces ads with motivational and productive content widgets.",
-  "permissions": ["activeTab", "contextMenus", "webRequest", "storage"],
-  "optional_permissions": ["topSites"],
+  "description": "Replaces ad content with custom messages",
+  "permissions": ["storage", "scripting"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"
@@ -17,17 +16,16 @@
       "128": "icons/icon128.png"
     }
   },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"],
-      "run_at": "document_idle"
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["widgets/*"],
-      "matches": ["<all_urls>"]
+      "run_at": "document_end"
     }
   ]
 }
