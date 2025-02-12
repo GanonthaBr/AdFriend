@@ -1,7 +1,6 @@
 // background.js - Handles extension events and settings
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.set({ messageType: "motivational" });
-  console.log("AdFriend");
 });
 
 // Listen for messages from content scripts

@@ -1,133 +1,77 @@
-// // content.js - Detects and replaces ads with positive content
-
-// if (document.readyState === "loading") {
-//   document.addEventListener("DOMContentLoaded", () => {
-//     replaceAds();
-//   });
-// } else {
-//   replaceAds();
-// }
-// function replaceAds() {
-//   const adSelectors = [
-//     "iframe", // Many ads are inside iframes
-//     "ins", // Used for Google AdSense
-//     '[id*="ads*"]', // Elements with "ad" in ID
-//     '[id*="google_image"]', // Elements with "ad" in ID
-//     '[class*="ads*"]', // Elements with "ad" in class name
-//     '[class*="GoogleActiveViewElement"]', // Elements with "ad" in class name
-//     '[class*="GoogleCreativeContainerClass"]', // Elements with "ad" in class name
-//     '[class*="celtra-screen-object"]', // Elements with "ad" in class name
-//     '[class*="canvasSize"]', // Elements with "ad" in class name
-//     '[id*="sponsored-*"]', // Elements with "sponsored" in ID
-//     '[class*="sponsored-*"]', // Elements with "sponsored" in class
-//   ];
-
-//   adSelectors.forEach((selector) => {
-//     document.querySelectorAll(selector).forEach((ad) => {
-//       console.log(ad);
-
-//       const widget = document.createElement("div");
-//       widget.style.cssText =
-//         "background:rgb(26, 127, 182); padding: 10px; border-radius: 5px; text-align: center; font-size: 14px;";
-//       widget.innerText = getPositiveMessage();
-//       ad.replaceWith(widget);
-//     });
-//   });
-// }
-
-// const adClassRegEx = /(^|\s)(ads?|sponsored)(\s|$)/;
-// // Function to handle newly added nodes
-// function handleMutations(mutations) {
-//   mutations.forEach((mutation) => {
-//     mutation.addedNodes.forEach((node) => {
-//       if (node.nodeType === Node.ELEMENT_NODE) {
-//         const className = node.className || "";
-//         const id = node.id || "";
-//         // Check if the new node matches the ad-related pattern
-//         if (adClassRegEx.test(className) || adClassRegEx.test(id)) {
-//           // Replace the ad with a positive message
-//           const widget = document.createElement("div");
-//           widget.style.cssText =
-//             "background:rgb(26, 127, 182); padding: 10px; border-radius: 5px; text-align: center; font-size: 14px;";
-//           widget.innerText = getPositiveMessage();
-//           ad.replaceWith(widget);
-//         }
-//       }
-//     });
-//   });
-// }
-
-// // Create a MutationObserver instance
-// const observer = new MutationObserver(handleMutations);
-
-// // Start observing the document body for child additions
-// observer.observe(document.body, { childList: true, subtree: true });
-
-// function getPositiveMessage() {
-//   const messages = [
-//     "Keep pushing forward!",
-//     "You are doing great!",
-//     "Believe in yourself!",
-//     "Stay focused and positive!",
-//     "Every step counts!",
-//   ];
-//   return messages[Math.floor(Math.random() * messages.length)];
-// }
-
-// Common ad selectors (you can add more)
+// Commonly used Ads selectors
 const adSelectors = [
-  'iframe[id*="google_ads"]',
-  'div[class*="ad-"]',
-  'div[id*="ad-"]',
-  "div[data-ad]",
-  "ins.adsbygoogle",
+  "iframe",
+  "iframe[class*='ad']",
+  'div[id*="ads"]',
+  'div[class*="GoogleCreativeContainerClass"]',
+  'div[class*="ads"]',
 ];
 
-// Custom content to replace ads
-let customContent = `
-  <div style="border: 2px solid #4CAF50; padding: 20px; background-color: #f8f8f8;">
-    <h3>Custom Content</h3>
-    <p>This space normally shows ads</p>
-    <p>😊 Have a nice day!</p>
+let content = `
+  <div class="adFriend" style="background:rgb(93, 170, 211); padding: 10px; border-radius: 5px; text-align: center; font-size: 14px; animation: backgroundColorChange 10s infinite;">
+    <h3 style="color:#fff;font-weight:bold">🚀YOUR DESIRED CONTENT🚀</h3>
+    ${getMessage()}
+    <p>😊</p>
   </div>
 `;
 
-// Function to replace ad content
-function replaceAds() {
+// Add CSS for animation
+const style = document.createElement("style");
+style.innerHTML = `
+  @keyframes backgroundColorChange {
+    0% { background-color: rgb(93, 170, 211); }
+    25% { background-color: rgb(77, 224, 182); }
+    50% { background-color: rgb(20, 144, 210); }
+    75% { background-color: rgb(150, 226, 129); }
+    100% { background-color: rgb(20, 144, 210); }
+  }
+`;
+document.head.appendChild(style);
+
+// our function that catch ads elements and replace them
+function getAds_Replace() {
   adSelectors.forEach((selector) => {
     document.querySelectorAll(selector).forEach((element) => {
-      console.log(element);
-
       // Preserve original dimensions
       const originalStyle = window.getComputedStyle(element);
-      element.innerHTML = customContent;
+      element.innerHTML = content;
       element.style.width = originalStyle.width;
       element.style.height = originalStyle.height;
-      element.style.backgroundColor = "#f8f8f8";
     });
   });
 }
 
-// Run initially and observe DOM changes
-replaceAds();
+// Run the function for initial check
+getAds_Replace();
+
+// Now observe any mutation of Nodes every 10 secs then run the function again
 const observer = new MutationObserver(() => {
   var timeout;
-  console.log("Mutation detected, debouncing detectAds call...");
 
   clearTimeout(timeout);
-  // Debounce to avoid running detectAds too frequently
+  // 2 secs wait before running
   timeout = setTimeout(() => {
-    console.log("Debounce timeout reached, calling detectAds()");
-    detectAds();
-  }, 100);
+    getAds_Replace();
+  }, 2000);
 });
 observer.observe(document.body, { childList: true, subtree: true });
-console.log("Mutation Observer is now observing document.body");
 
 // Listen for custom content updates
 chrome.runtime.onMessage.addListener((request) => {
   if (request.customContent) {
     customContent = request.customContent;
-    replaceAds();
+    getAds_Replace();
   }
 });
+
+function getMessage() {
+  const messages = [
+    "Keep pushing forward!",
+    "You are doing great!",
+    "Believe in yourself!",
+    "Stay focused and positive!",
+    "Every step counts!",
+  ];
+
+  return messages[Math.floor(Math.random() * messages.length)];
+}

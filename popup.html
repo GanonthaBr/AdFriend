@@ -1,37 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <head>
-    <title>AdFriend Settings</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        width: 200px;
-        padding: 10px;
-      }
-      select {
-        width: 100%;
-        padding: 5px;
-      }
-      button {
-        margin-top: 10px;
-        padding: 5px;
-        width: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <h2>AdFriend Settings</h2>
-    <label for="messageType">Choose Content Type:</label>
-    <select id="messageType">
-      <option value="motivational">Motivational Quotes</option>
-      <option value="reminders">Activity Reminders</option>
-    </select>
-    <button id="save">Save</button>
-    <script src="popup.js"></script>
-  </body>
-</html> -->
 <!DOCTYPE html>
 <html lang="en">
   <meta charset="UTF-8" />
@@ -59,6 +25,16 @@
     <h3>Custom Ad Content</h3>
     <textarea id="customContent" rows="6" cols="30"></textarea>
     <button id="save">Save Content</button>
-    <script src="popup.js"></script>
+    <script>
+      document.getElementById("save").addEventListener("click", () => {
+        console.log("CLICKED!");
+        const customContent = document.querySelector(".adFriend").value;
+        chrome.storage.sync.set({ customContent }, () => {
+          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.tabs.sendMessage(tabs[0].id, { customContent });
+          });
+        });
+      });
+    </script>
   </body>
 </html>

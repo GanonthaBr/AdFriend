@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Ad Content Replacer",
+  "name": "AdFriend: Replace ads' contents with custom Message",
   "version": "1.0",
   "description": "Replaces ad content with custom messages",
   "permissions": ["storage", "scripting"],

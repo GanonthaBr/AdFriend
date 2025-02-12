@@ -23,4 +23,4 @@ The extension includes a settings panel where users select themes, message types
 
 ## Tech Stack:
 
-**JavaScript, HTML, CSS**
+**JavaScript, HTML, CSS, Manifest JSON**
